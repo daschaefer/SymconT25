@@ -87,10 +87,11 @@ class T25 extends IPSModule
             if(isset($_GET) && isset($_GET['event'])) {
                 $timestamp = time();
 
-                $eventID = @$this->GetIDForIdent($_GET['event']);
+                $eventID = @$this->GetIDForIdent("event_".$_GET['event']);
                 if($eventID == false) {
-                    $eventID = $this->RegisterVariableString($_GET['event'], $_GET['event']);
+                    $eventID = $this->RegisterVariableString("event_".$_GET['event'], "Ereignis: ".$_GET['event']);
                     IPS_SetIcon($eventID, "Hourglass");
+                    IPS_SetHidden($eventID, true);
                 }
                 SetValue($eventID, $timestamp);
 

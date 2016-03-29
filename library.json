@@ -3,7 +3,7 @@
 	"author": "Daniel Schäfer",
 	"name": "Mobotix T25 Module",
 	"url": "http://git.schaefer2.de/daniel/SymconT25.git",
-	"version": "1.0",
+	"version": "1.1",
 	"build": 0,
 	"date": 0
 }
