@@ -1,0 +1,14 @@
+{
+	"id": "{5C88E486-9884-40FB-A306-ED4E91D88FDE}",
+	"name": "T25",
+	"type": 3,
+	"vendor": "Mobotix",
+	"aliases": 
+	[
+		"T25 Sprechanlage"
+	],
+	"parentRequirements": [""],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "T25"
+}

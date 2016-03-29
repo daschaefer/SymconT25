@@ -1,0 +1,13 @@
+{
+	"elements":
+	[
+		{ "name": "T25IP",						"type": "ValidationTextBox", "caption": "IP-Adresse" },
+        { "name": "T25Port",					"type": "NumberSpinner", "caption": "Port" },
+        { "name": "T25Protocol",          		"type": "Select", "caption": "Protokoll", 
+                    "options": [
+                    				{ "label": "HTTP",		"value": "http" },
+                    				{ "label": "HTTPS",		"value": "https" }
+                    			] },
+        { "name": "T25LogMode",             	"type": "CheckBox", "caption": "Ereignisse protokollieren" }
+	]
+}
