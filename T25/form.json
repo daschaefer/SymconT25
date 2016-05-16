@@ -8,6 +8,12 @@
                     				{ "label": "HTTP",		"value": "http" },
                     				{ "label": "HTTPS",		"value": "https" }
                     			] },
-        { "name": "T25LogMode",             	"type": "CheckBox", "caption": "Ereignisse protokollieren" }
+        { "name": "T25LogMode",             	"type": "CheckBox", "caption": "Ereignisse protokollieren" },
+		{ "name": "T25HookUsername",			"type": "ValidationTextBox", "caption": "Webhook Benutzername" },
+		{ "name": "T25HookPassword",			"type": "ValidationTextBox", "caption": "Webhook Passwort" }
+	],
+	"actions":
+	[
+		{ "type": "Button", "label": "Webhook Passwort generieren", "onClick": "GenerateNewHookPassword($id);" }
 	]
 }

@@ -12,6 +12,8 @@ class T25 extends IPSModule
         $this->RegisterPropertyInteger("T25Port", 80);
         $this->RegisterPropertyString("T25Protocol", "http");
         $this->RegisterPropertyBoolean("T25LogMode", false);
+        $this->RegisterPropertyString("T25HookUsername", "t25");
+		$this->RegisterPropertyString("T25HookPassword", $this->GeneratePassphrase(18));
 
         // Private properties
         $this->RegisterPropertyString("T25LastEventJSON", "");
@@ -49,6 +51,10 @@ class T25 extends IPSModule
         // create variables
         $lastEvent = $this->RegisterVariableString("lastEvent", "letzte Aktivität");
         IPS_SetIcon($lastEvent, "Alert");
+        
+        
+        $hookPassword = $this->RegisterVariableString("hookPassword", "letzte Aktivität");
+        IPS_SetHidden($hookPassword, true);
 
         $doorOpener = $this->RegisterVariableInteger("DoorOpener", "Türsummer", "T25.DoorOpener");
         $this->EnableAction("DoorOpener");
@@ -84,6 +90,20 @@ class T25 extends IPSModule
             echo "This script cannot be used this way.";
             return;
         } else {
+            if((IPS_GetProperty($this->InstanceID, "T25HookUsername") != "") || (IPS_GetProperty($this->InstanceID, "T25HookPassword") != "")) {
+				if(!isset($_SERVER['PHP_AUTH_USER']))
+					$_SERVER['PHP_AUTH_USER'] = "";
+				if(!isset($_SERVER['PHP_AUTH_PW']))
+					$_SERVER['PHP_AUTH_PW'] = "";
+					
+				if(($_SERVER['PHP_AUTH_USER'] != IPS_GetProperty($this->InstanceID, "T25HookUsername")) || ($_SERVER['PHP_AUTH_PW'] != IPS_GetProperty($this->InstanceID, "T25HookPassword"))) {
+					header('WWW-Authenticate: Basic Realm="Geofency WebHook"');
+					header('HTTP/1.0 401 Unauthorized');
+					echo "Authorization required";
+					return;
+				}
+			}
+            
             if(isset($_GET) && isset($_GET['event'])) {
                 $timestamp = time();
 
@@ -104,6 +124,10 @@ class T25 extends IPSModule
                     IPS_LogMessage(IPS_GetObject($this->InstanceID)['ObjectName'], "Ereignis ausgelöst: ".$_GET['event']);
             }
         }
+    }
+    
+    public function GenerateNewHookPassword() {
+        SetValue(IPS_GetProperty($this->InstanceID, "T25HookPassword"), GeneratePassphrase(18));
     }
 
 
@@ -199,6 +223,22 @@ class T25 extends IPSModule
     {
         $instance = IPS_GetInstance($this->InstanceID);
         return ($instance['ConnectionID'] > 0) ? $instance['ConnectionID'] : false;
+    }
+    
+    protected function GeneratePassphrase($length) {
+        $passphrase = "";
+            $chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '!', '$', '#', '-', '_');
+            $charLastIndex = 0;
+            for($i=0; $i < $length; $i++) {
+               $randIndex = rand(0, (count($chars)-1));
+               while (abs($randIndex - $charLastIndex) < 10) {
+                   $randIndex = rand(0, (count($chars)-1));
+               }
+               $charLastIndex = $randIndex;
+               $passphrase .= $chars[$randIndex];
+            }
+        
+        return $passphrase;
     }
 }
 
