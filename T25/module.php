@@ -79,6 +79,12 @@ class T25 extends IPSModule
         $url = IPS_GetProperty($this->InstanceID, "T25Protocol")."://".IPS_GetProperty($this->InstanceID, "T25IP").":".IPS_GetProperty($this->InstanceID, "T25Port")."/control/rcontrol?action=customfunction&action=sigout&profile=~Door";
         file_get_contents($url);
     }
+    
+    public function Hangup()
+    {
+        $url = IPS_GetProperty($this->InstanceID, "T25Protocol")."://".IPS_GetProperty($this->InstanceID, "T25IP").":".IPS_GetProperty($this->InstanceID, "T25Port")."/control/rcontrol?action=voiphangup";
+        file_get_contents($url);
+    }
 
     public function GetLastEvent() {
         return json_decode(IPS_GetProperty($this->InstanceID, "T25LastEventJSON"));
