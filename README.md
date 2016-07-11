@@ -40,13 +40,39 @@ Danach ist es möglich eine neue Mobotix T25 Instanz innerhalb des Objektbaumes 
 
 *Der Port unter die Gegensprechanlage erreichbar ist. Dieser ist in der Regel der Port 80 und muss nicht geändert werden.*
 
+**Benutzername: (optional)**
+
+*Der Benutzername der auf die HTTP API Funktionen der Gegensprechanlage zugreifen darf.*
+
+**Passwort: (optional)**
+
+*Das Passwort zum Benutzernamen.*
+
 **Protokoll:**
 
 *Das verwendete Protokoll (HTTP oder HTTPS) vom Webinterface der Gegensprechanlage*
 
+**Webhook Benutzername:**
+
+*Der Benutzername zum Schutz des Webhooks. Standardmäßig: t25*
+
+**Webhook Passwort:**
+
+*Das Passwort zum Schutz des Webhooks. Wird automatisch bei Installation der Instanz generiert und muss in der Regel nicht geändert werden.*
+
+**Kamerabilder Ordner: (optional)**
+
+*Der Ordner auf den die Gegensprechanlage bei einem Ereignis Bilder ablegt. Dazu muss die Kamera der Sprechanlage so konfiguriert werden, dass auf dieses Verzeichnis geschrieben wird. Entsprechend muss eine Freigabe erstellt werden.
+Das Verzeichnis befindet sich idealerweise im IP-Sycon Verzeichnis unter webfront/users, anderenfalls wird der Zugriff auf die Bilder schwierig.*
+
+**Kamerabilder Anzahl: (optional)**
+
+*Die Anzahl der Bilder die maximal Angezeigt werden. Im Standard: die Bilder zu den letzten 5 Ereignissen.*
+
 **Ereignisse protokollieren:**
 
 *Wenn der Haken gesetzt ist werden alle an IP-Symcon weitergeleiteten Events (Ereignisse) von der Gegensprechanlage innerhalb IP-Symcon im Log aufgezeichnet.*
+
 
 ### Konfiguration der Gegensprechanlage
 
@@ -72,7 +98,16 @@ Danach ist es möglich eine neue Mobotix T25 Instanz innerhalb des Objektbaumes 
 
 **T25 Kamera Stream**
 
-*Dieses Medien Objekt enthält die URL zur Kamera der Gegensprechanlage und kann entsprechend ins Webfrontend eingebunden werden.*
+*Dieses Medien Objekt enthält die URL zur Kamera der Gegensprechanlage und kann entsprechend ins Webfrontend eingebunden werden.
+Achtung: Chrome hat Probleme mit der Basis Authentifizierung sobald Benutzername + Passwort gesetzt sind. Es wird daher kein Bild angezeigt => Browser wechseln. Firefox hat keine Probleme.*
+
+**Gespeicherte Kamerabilder anzeigen**
+
+*Dieses PopUp Objekt enthält eine String Variable mit den letzten 5 Ereignisbildern. Die Anzahl der Bilder kann in der Konfiguration verändert werden.*
+
+**Sensorvariablen**
+
+*Diverse Sensorvariablen welche von der Kamera bereitgestellt werden, z.B. Helligkeit, Temperatur etc.*
 
 ## 5. Skripte
 
@@ -97,6 +132,12 @@ stdClass Object
 
 ---
 ```php
+T25_HangUp(integer $InstanceID)
+```
+Beendet alle VoIP Anrufe. Praktisch z.B. um das Melden per VoIP zu beenden wenn die Tür nach einem Klingeln geöffnet wurde.
+
+---
+```php
 T25_OpenDoor(integer $InstanceID)
 ```
 Öffnet die Tür mittels des Türsummers.
@@ -106,3 +147,9 @@ T25_OpenDoor(integer $InstanceID)
 T25_ProcessHookData(integer $InstanceID)
 ```
 Verabeitet die Informationen des Webhooks.
+
+---
+```php
+T25_UpdateData(integer $InstanceID)
+```
+Synchonisiert Daten von der Kamera zu IP-Symcon.
