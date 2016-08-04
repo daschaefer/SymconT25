@@ -156,9 +156,11 @@ class T25 extends IPSModule
             if(isset($_GET) && isset($_GET['event'])) {
                 $timestamp = time();
 
-                $eventID = @$this->GetIDForIdent("event_".str_replace(array(' '), '_', $_GET['event']));
+                $identReplaceChars = array(' ', ',', '-', '.', ':', ';', '+', '*', '~', '!', '?', '/', '\\', '[', ']', '{', '}', '&', '%', '$', '§', '\"', '\'', '=', '´', '`', '<', '>', '|', '#');
+                
+                $eventID = @$this->GetIDForIdent("event_".str_replace($identReplaceChars, '_', $_GET['event']));
                 if($eventID == false) {
-                    $eventID = $this->RegisterVariableString("event_".str_replace(array(' '), '_', $_GET['event']), "Ereignis: ".$_GET['event']);
+                    $eventID = $this->RegisterVariableString("event_".str_replace($identReplaceChars, '_', $_GET['event']), "Ereignis: ".$_GET['event']);
                     IPS_SetIcon($eventID, "Hourglass");
                     IPS_SetHidden($eventID, true);
                 }
@@ -324,7 +326,7 @@ class T25 extends IPSModule
                     $HTML .= $this->BuildCameraEventOverview($listItem);
                 }
                 else if(count($listItem) > 1) { // is filelist
-                    // print_r($listItem);
+                    
 
                     foreach ($listItem as $path) {
                         foreach ($path as $key => $value) { // key = path to file; value = array(filename)

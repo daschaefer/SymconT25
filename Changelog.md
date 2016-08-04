@@ -1,4 +1,7 @@
 # Changelog
+### Version 1.6
+Bugfix: Mehrfachanlage von Ereignisvariablen wenn Sonderzeichen im Bezeichner vorhanden sind.
+
 ### Version 1.5
 Feature: Benutzername + Passwort Authentifikation gegenüber der Gegensprechanlage.
 Feature: LED's der Gegensprechanlage ein/aus-schaltbar.
