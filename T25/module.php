@@ -411,11 +411,14 @@ class T25 extends IPSModule
                     }
 
                     $value = str_replace($replace, '', $value);
+                    
+                    $identReplaceChars = array(' ', ',', '-', '.', ':', ';', '+', '*', '~', '!', '?', '/', '\\', '[', ']', '{', '}', '&', '%', '$', '§', '\"', '\'', '=', '´', '`', '<', '>', '|', '#');
+                    $Ident = "sensor_".strtolower(str_replace($identReplaceChars, "_", $key));
 
-                    $Variable = @IPS_GetObjectIDByIdent("sensor_".strtolower($key), $this->InstanceID);
+                    $Variable = @IPS_GetObjectIDByIdent($Ident, $this->InstanceID);
                     if(!$Variable) {
                         $Variable = IPS_CreateVariable($type);
-                        IPS_SetIdent($Variable, "sensor_".strtolower($key));
+                        IPS_SetIdent($Variable, $Ident);
                         IPS_SetName($Variable, $key);
                         IPS_SetVariableCustomProfile($Variable, $profile);
                         IPS_SetParent($Variable, $this->InstanceID);

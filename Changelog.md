@@ -1,4 +1,7 @@
 # Changelog
+### Version 1.7
+Bugfix: Mehrfachanlage von Kameravariablen wenn Sonderzeichen im Bezeichner vorhanden sind.
+
 ### Version 1.6
 Bugfix: Mehrfachanlage von Ereignisvariablen wenn Sonderzeichen im Bezeichner vorhanden sind.
 
