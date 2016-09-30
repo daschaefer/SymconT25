@@ -166,7 +166,8 @@ class T25 extends IPSModule
                 }
                 SetValue($eventID, $timestamp);
 
-                SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']." am ".date("d.m.Y H:i:s", $timestamp));
+                // SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']." am ".date("d.m.Y H:i:s", $timestamp));
+                SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']);
 
                 $data = array("event" => $_GET['event'], "timestamp" => date("d.m.Y H:i:s", $timestamp), "unix_timestamp" => $timestamp);
                 @IPS_SetProperty($this->InstanceID, "T25LastEventJSON", json_encode($data));
@@ -192,7 +193,8 @@ class T25 extends IPSModule
         else {
             $path .= "/webfront/user/";
         }
-        $itemList = $this->GetCameraPictureList($path.IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName"), $amount);
+        $itemList = $this->GetCameraPictureList($path.IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName"));
+        $itemList = $this->SortCameraPictureList($itemList, $amount);
         SetValue(IPS_GetObjectIDByIdent("CameraEventListHTML", IPS_GetObjectIDByIdent("CameraEventListPopUp", $this->InstanceID)), $this->BuildCameraEventOverview($itemList));
     }
 
@@ -317,17 +319,75 @@ class T25 extends IPSModule
         return $passphrase;
     }
 
-    protected function BuildCameraEventOverview($list) {
+    protected function BuildCameraEventOverview($imageList) {
         $HTML = "";
 
-        if(is_array($list) && count($list) > 0) {
-            foreach ($list as $listItem) {
+        if(is_array($imageList) && count($imageList) > 0) {
+            foreach ($imageList as $image) {
+                if(is_array($image))
+                    continue;
+
+                $HTML .= "<img style=\"width: 100%; height: auto;\" src=\"".$image."\">";    
+            }
+        }
+
+        
+        return $HTML;
+    }
+
+    protected function GetCameraPictureList($path) {
+        $items = array();
+
+        $excludeList = array(".", "..", "INFO.jpg", "log.txt", "Thumbs.db");
+
+        $files = preg_grep('/^([^.])/', scandir($path)); // open $path excluding hidden files
+
+        $i = 0;
+        foreach ($files as $file) {
+            if (!in_array($file, $excludeList)) {
+                if(is_dir($path."/".$file)) {
+                    // if($i == $maxDepth)
+                    //      break;
+                    
+                    $items[$path][] = $this->GetCameraPictureList($path."/".$file);
+                    $i++;
+                }
+                else {
+                    if($file == "E00000.jpg")
+                        $items[$path][] = $file;
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    protected function SortCameraPictureList($pictureList, $maxDepth=5) {
+        $return = array();
+        $fileList = $this->SortCameraPictureList_BuildFileList($pictureList);
+        krsort($fileList);
+
+        $i = 0;
+        foreach ($fileList as $value) {
+            if($i >= $maxDepth)
+                break;
+            
+            $return[] = $value;
+            $i++;
+        }
+        
+        return $return;
+    }
+
+    protected function SortCameraPictureList_BuildFileList($pictureList) {
+        $fileList = array();
+
+        if(is_array($pictureList) && count($pictureList) > 0) {
+            foreach ($pictureList as $listItem) {
                 if(count($listItem) == 1) { // is dir
-                    $HTML .= $this->BuildCameraEventOverview($listItem);
+                    $fileList = $this->SortCameraPictureList_BuildFileList($listItem);
                 }
                 else if(count($listItem) > 1) { // is filelist
-                    
-
                     foreach ($listItem as $path) {
                         foreach ($path as $key => $value) { // key = path to file; value = array(filename)
                             foreach($value as $image) {
@@ -341,44 +401,15 @@ class T25 extends IPSModule
                                     $webfrontPath = "/webfront";
                                 }
 
-                                $key = str_replace(IPS_GetKernelDir().$webfrontPath,"",$key);
-                                $HTML .= "<img style=\"width: 100%; height: auto;\" src=\"".$key."/".$image."?p=".time()."\">";
+                                $fileList[filemtime($key."/".$image)] = str_replace(IPS_GetKernelDir().$webfrontPath,"",$key)."/".$image."?p=".time();
                             }
                         }
                     }
-                }    
-            }
-        }
-
-        
-        return $HTML;
-    }
-
-    protected function GetCameraPictureList($path, $maxDepth=5) {
-        $items = array();
-
-        $excludeList = array(".", "..", "INFO.jpg", "log.txt", "Thumbs.db");
-
-        $files = preg_grep('/^([^.])/', scandir($path, SCANDIR_SORT_DESCENDING)); // open $path excluding hidden files
-
-        $i = 0;
-        foreach ($files as $file) {
-            if (!in_array($file, $excludeList)) {
-                if(is_dir($path."/".$file)) {
-                    if($i == $maxDepth)
-                         break;
-                    
-                    $items[$path][] = $this->GetCameraPictureList($path."/".$file, $maxDepth);
-                    $i++;
-                }
-                else {
-                    if($file == "E00000.jpg")
-                        $items[$path][] = $file;
                 }
             }
         }
 
-       return $items;
+        return $fileList;
     }
 
     protected function LoadCameraInfo() {

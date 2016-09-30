@@ -1,4 +1,8 @@
 # Changelog
+### Version 1.8
+Change: Letztes Ereignis wird ohne Timestamp erfasst, damit man dies bei einer Archivierung nicht doppelt speichert.
+Bugfix: Sortierung der letzten Kamerabilder nach Last Modified Date und nicht mehr nach Ordnernamen.
+
 ### Version 1.7
 Bugfix: Mehrfachanlage von Kameravariablen wenn Sonderzeichen im Bezeichner vorhanden sind.
 
