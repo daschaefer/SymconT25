@@ -15,6 +15,7 @@ class T25 extends IPSModule
         $this->RegisterPropertyString("T25Password", "");
         $this->RegisterPropertyString("T25Protocol", "http");
         $this->RegisterPropertyBoolean("T25LogMode", false);
+        $this->RegisterPropertyBoolean("T25LogTimestamp", true);
         $this->RegisterPropertyString("T25HookUsername", "t25");
 		$this->RegisterPropertyString("T25HookPassword", $this->GeneratePassphrase(18));
         $this->RegisterPropertyString("T25CameraPictureFolderName", "");
@@ -166,8 +167,10 @@ class T25 extends IPSModule
                 }
                 SetValue($eventID, $timestamp);
 
-                // SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']." am ".date("d.m.Y H:i:s", $timestamp));
-                SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']);
+                if(IPS_GetProperty($this->InstanceID, "T25LogTimestamp") == true)
+                    SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']." am ".date("d.m.Y H:i:s", $timestamp));
+                else
+                    SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']);
 
                 $data = array("event" => $_GET['event'], "timestamp" => date("d.m.Y H:i:s", $timestamp), "unix_timestamp" => $timestamp);
                 @IPS_SetProperty($this->InstanceID, "T25LastEventJSON", json_encode($data));

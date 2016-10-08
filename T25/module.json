@@ -5,7 +5,7 @@
 	"vendor": "Mobotix",
 	"aliases": 
 	[
-		"T25 Sprechanlage"
+		"T24/T25 Sprechanlage"
 	],
 	"parentRequirements": [""],
 	"childRequirements": [],
