@@ -12,6 +12,7 @@ Es werden automatisch Variablen anhand des Event Typs der Gegensprechanlage ange
 4. [Variablen](#4-variablen)
 5. [Hintergrund Skripte](#5-hintergrund-skripte)
 6. [Funktionen](#6-funktionen)
+6. [Webhook Parameter](#7-webhook-parameter)
 
 ## 1. Funktionsumfang  
 Die folgenden Funktionalitäten sind implementiert:
@@ -153,3 +154,16 @@ Verabeitet die Informationen des Webhooks.
 T25_UpdateData(integer $InstanceID)
 ```
 Synchonisiert Daten von der Kamera zu IP-Symcon.
+
+## 7. Webhook Parameter
+```html
+event
+```
+Die Bezeichnung des Ereignisses, welches innerhalb Symcon als Variable gespeichert wird und mit einem Unix Timestamp des letzten Auftretens gefüllt wird.
+
+---
+```html
+instanceid
+```
+Wird vorbelegt mit der ID der Instanz innerhalb Symcons. Dadurch kann der Webhook die Zuordnung bei mehreren eingesetzten Sprechanlagen übernehmen und setzt die Variablen in den richtigen Instanzen.
+

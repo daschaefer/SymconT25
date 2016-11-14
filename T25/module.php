@@ -4,7 +4,7 @@ require_once('simple_html_dom.php');
 
 class T25 extends IPSModule
 {
-        
+         
     public function Create() {
         parent::Create();
         
@@ -140,13 +140,20 @@ class T25 extends IPSModule
             echo "This script cannot be used this way.";
             return;
         } else {
-            if((IPS_GetProperty($this->InstanceID, "T25HookUsername") != "") || (IPS_GetProperty($this->InstanceID, "T25HookPassword") != "")) {
+            $instanceID = $this->InstanceID;
+            if(isset($_GET['instanceid']) && $_GET['instanceid'] > 0) {
+                if(IPS_GetObject($_GET['instanceid'])['ObjectType'] == 1) {
+                    $instanceID = $_GET['instanceid'];
+                }
+            }
+
+            if((IPS_GetProperty($instanceID, "T25HookUsername") != "") || (IPS_GetProperty($instanceID, "T25HookPassword") != "")) {
 				if(!isset($_SERVER['PHP_AUTH_USER']))
 					$_SERVER['PHP_AUTH_USER'] = "";
 				if(!isset($_SERVER['PHP_AUTH_PW']))
 					$_SERVER['PHP_AUTH_PW'] = "";
 					
-				if(($_SERVER['PHP_AUTH_USER'] != IPS_GetProperty($this->InstanceID, "T25HookUsername")) || ($_SERVER['PHP_AUTH_PW'] != IPS_GetProperty($this->InstanceID, "T25HookPassword"))) {
+				if(($_SERVER['PHP_AUTH_USER'] != IPS_GetProperty($instanceID, "T25HookUsername")) || ($_SERVER['PHP_AUTH_PW'] != IPS_GetProperty($instanceID, "T25HookPassword"))) {
 					header('WWW-Authenticate: Basic Realm="Geofency WebHook"');
 					header('HTTP/1.0 401 Unauthorized');
 					echo "Authorization required";
@@ -159,24 +166,27 @@ class T25 extends IPSModule
 
                 $identReplaceChars = array(' ', ',', '-', '.', ':', ';', '+', '*', '~', '!', '?', '/', '\\', '[', ']', '{', '}', '&', '%', '$', '§', '\"', '\'', '=', '´', '`', '<', '>', '|', '#');
                 
-                $eventID = @$this->GetIDForIdent("event_".str_replace($identReplaceChars, '_', $_GET['event']));
+                $eventID = @IPS_GetObjectIDByIdent("event_".str_replace($identReplaceChars, '_', $_GET['event']), $instanceID);
                 if($eventID == false) {
-                    $eventID = $this->RegisterVariableString("event_".str_replace($identReplaceChars, '_', $_GET['event']), "Ereignis: ".$_GET['event']);
+                    $eventID = IPS_CreateVariable(3);
+                    IPS_SetIdent($eventID, "event_".str_replace($identReplaceChars, '_', $_GET['event']));
+                    IPS_SetName($eventID, "Ereignis: ".$_GET['event']);
+                    IPS_SetParent($eventID, $instanceID);
                     IPS_SetIcon($eventID, "Hourglass");
                     IPS_SetHidden($eventID, true);
                 }
                 SetValue($eventID, $timestamp);
 
-                if(IPS_GetProperty($this->InstanceID, "T25LogTimestamp") == true)
-                    SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']." am ".date("d.m.Y H:i:s", $timestamp));
+                if(IPS_GetProperty($instanceID, "T25LogTimestamp") == true)
+                    SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $_GET['event']." am ".date("d.m.Y H:i:s", $timestamp));
                 else
-                    SetValue($this->GetIDForIdent("lastEvent"), $_GET['event']);
+                    SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $_GET['event']);
 
                 $data = array("event" => $_GET['event'], "timestamp" => date("d.m.Y H:i:s", $timestamp), "unix_timestamp" => $timestamp);
-                @IPS_SetProperty($this->InstanceID, "T25LastEventJSON", json_encode($data));
+                @IPS_SetProperty($instanceID, "T25LastEventJSON", json_encode($data));
 
-                if(IPS_GetProperty($this->InstanceID, "T25LogMode") == true)
-                    IPS_LogMessage(IPS_GetObject($this->InstanceID)['ObjectName'], "Ereignis ausgelöst: ".$_GET['event']);
+                if(IPS_GetProperty($instanceID, "T25LogMode") == true)
+                    IPS_LogMessage(IPS_GetObject($instanceID)['ObjectName'], "Ereignis ausgelöst: ".$_GET['event']);
             }
         }
     }

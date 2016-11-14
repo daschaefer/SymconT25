@@ -1,4 +1,7 @@
 # Changelog
+### Version 2.0
+Feature: Bei dem Aufruf des Webhooks kann nun ein Parameter 'instanceid=' mitgegeben werden, anhand dessen wird die Datenübernahme der angegebenen Instanz geändert. Dies wird z.B. in einer Umgebung Verwendung finden in derer mehrere T24/T25 Sprechanlagen vorhanden sind. 
+
 ### Version 1.9
 Change: Letztes Ereignis mit oder ohne Timestamp nun per Checkbox einstellbar.
 
