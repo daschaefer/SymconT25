@@ -162,31 +162,35 @@ class T25 extends IPSModule
 			}
             
             if(isset($_GET) && isset($_GET['event'])) {
+                $eventInput = str_replace("%0A", "", $_GET['event']);
                 $timestamp = time();
-
                 $identReplaceChars = array(' ', ',', '-', '.', ':', ';', '+', '*', '~', '!', '?', '/', '\\', '[', ']', '{', '}', '&', '%', '$', '§', '\"', '\'', '=', '´', '`', '<', '>', '|', '#');
                 
-                $eventID = @IPS_GetObjectIDByIdent("event_".str_replace($identReplaceChars, '_', $_GET['event']), $instanceID);
-                if($eventID == false) {
-                    $eventID = IPS_CreateVariable(3);
-                    IPS_SetIdent($eventID, "event_".str_replace($identReplaceChars, '_', $_GET['event']));
-                    IPS_SetName($eventID, "Ereignis: ".$_GET['event']);
-                    IPS_SetParent($eventID, $instanceID);
-                    IPS_SetIcon($eventID, "Hourglass");
-                    IPS_SetHidden($eventID, true);
+                $eventList = explode(',', $eventInput);
+            
+                foreach ($eventList as $event) {
+                    $eventID = @IPS_GetObjectIDByIdent("event_".str_replace($identReplaceChars, '_', $event), $instanceID);
+                    if($eventID == false) {
+                        $eventID = IPS_CreateVariable(3);
+                        IPS_SetIdent($eventID, "event_".str_replace($identReplaceChars, '_', $event));
+                        IPS_SetName($eventID, "Ereignis: ".$event);
+                        IPS_SetParent($eventID, $instanceID);
+                        IPS_SetIcon($eventID, "Hourglass");
+                        IPS_SetHidden($eventID, true);
+                    }
+                    SetValue($eventID, $timestamp);
+
+                    if(IPS_GetProperty($instanceID, "T25LogTimestamp") == true)
+                        SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $event." am ".date("d.m.Y H:i:s", $timestamp));
+                    else
+                        SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $event);
+
+                    $data = array("event" => $_GET['event'], "timestamp" => date("d.m.Y H:i:s", $timestamp), "unix_timestamp" => $timestamp);
+                    @IPS_SetProperty($instanceID, "T25LastEventJSON", json_encode($data));
+
+                    if(IPS_GetProperty($instanceID, "T25LogMode") == true)
+                        IPS_LogMessage(IPS_GetObject($instanceID)['ObjectName'], "Ereignis ausgelöst: ".$event);
                 }
-                SetValue($eventID, $timestamp);
-
-                if(IPS_GetProperty($instanceID, "T25LogTimestamp") == true)
-                    SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $_GET['event']." am ".date("d.m.Y H:i:s", $timestamp));
-                else
-                    SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $_GET['event']);
-
-                $data = array("event" => $_GET['event'], "timestamp" => date("d.m.Y H:i:s", $timestamp), "unix_timestamp" => $timestamp);
-                @IPS_SetProperty($instanceID, "T25LastEventJSON", json_encode($data));
-
-                if(IPS_GetProperty($instanceID, "T25LogMode") == true)
-                    IPS_LogMessage(IPS_GetObject($instanceID)['ObjectName'], "Ereignis ausgelöst: ".$_GET['event']);
             }
         }
     }
