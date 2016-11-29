@@ -1,4 +1,7 @@
 # Changelog
+### Version 2.2
+Feature: Ausgabe einer zuvor hochgeladenen Audiodatei über die Lautsprecher der Kamera. Aufruf via T25_PlaySoundFile(string $FileName).  
+
 ### Version 2.1
 Change: Zusammenhängende Ereignisse werden nun getrennt und als einzelnes Ereignis gespeichert.
 Feature: Komisches Sonderzeichen bei der Übergabe von der T25 wird nun rausgefiltert.   

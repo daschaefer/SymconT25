@@ -145,6 +145,12 @@ T25_OpenDoor(integer $InstanceID)
 
 ---
 ```php
+T25_PlaySoundFile(string $FileName)
+```
+Spielt eine zuvor hochgeladene Sounddatei über die Lautsprecher der Kamera ab. Der Dateiname muss exact so übergeben werden wie er in der Kamera abgelegt wurde (Case Sensitive).
+
+---
+```php
 T25_ProcessHookData(integer $InstanceID)
 ```
 Verabeitet die Informationen des Webhooks.

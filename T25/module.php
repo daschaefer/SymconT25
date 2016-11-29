@@ -99,7 +99,6 @@ class T25 extends IPSModule
 
     // PUBLIC ACCESSIBLE FUNCTIONS
     public function Test() {
-        $this->UpdateData();
     }
 
     public function UpdateData() {
@@ -128,6 +127,12 @@ class T25 extends IPSModule
     public function LEDsOff() {
         $url = $this->GetConnectionString()."/control/rcontrol?action=ledsoff";
         
+        file_get_contents($url);
+    }
+
+    public function PlaySoundFile($FileName) {
+        $url = $this->GetConnectionString()."/control/rcontrol?action=sound&soundfile=".urlencode($FileName);
+
         file_get_contents($url);
     }
 
