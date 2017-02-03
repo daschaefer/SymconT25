@@ -75,7 +75,11 @@ class T25 extends IPSModule
         }
         IPS_SetName($cameraEventListHTML, "die letzten ".IPS_GetProperty($this->InstanceID, "T25CameraPictureAmount")." Ereignisse");
         
-        
+        $eventPictureFilename = $this->RegisterVariableString("eventPictureFilename", "Ereignis Bild Dateiname");
+        IPS_SetHidden($eventPictureFilename, true);
+
+        $eventPicturePath = $this->RegisterVariableString("eventPicturePath", "Ereignis Bild Pfad");
+        IPS_SetHidden($eventPicturePath, true);
 
         $lastEvent = $this->RegisterVariableString("lastEvent", "letzte Aktivität");
         IPS_SetIcon($lastEvent, "Alert");
@@ -165,38 +169,49 @@ class T25 extends IPSModule
 				}
 			}
             
-            if(isset($_GET) && isset($_GET['event'])) {
+            if(isset($_GET)) {
                 if(IPS_GetProperty($instanceID, "T25HookDebug") == true)
                     IPS_LogMessage(IPS_GetObject($instanceID)['ObjectName'], "\$_GET: ".print_r($_GET, true));
 
-                $eventInput = str_replace("%0A", "", $_GET['event']);
-                $timestamp = time();
-                $identReplaceChars = array(' ', ',', '-', '.', ':', ';', '+', '*', '~', '!', '?', '/', '\\', '[', ']', '{', '}', '&', '%', '$', '§', '\"', '\'', '=', '´', '`', '<', '>', '|', '#');
-                
-                $eventList = explode(',', $eventInput);
-            
-                foreach ($eventList as $event) {
-                    $eventID = @IPS_GetObjectIDByIdent("event_".str_replace($identReplaceChars, '_', $event), $instanceID);
-                    if($eventID == false) {
-                        $eventID = IPS_CreateVariable(3);
-                        IPS_SetIdent($eventID, "event_".str_replace($identReplaceChars, '_', $event));
-                        IPS_SetName($eventID, "Ereignis: ".$event);
-                        IPS_SetParent($eventID, $instanceID);
-                        IPS_SetIcon($eventID, "Hourglass");
-                        IPS_SetHidden($eventID, true);
-                    }
-                    SetValue($eventID, $timestamp);
+                if(isset($_GET['picture'])) { // picture has to be set first
+                    SetValue(IPS_GetObjectIDByIdent("eventPictureFilename", $instanceID), $_GET['picture']);
+                    SetValue(IPS_GetObjectIDByIdent("eventPicturePath", $instanceID), "/user/".IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName")."/".$_GET['picture']);
+                }
+                else {
+                    SetValue(IPS_GetObjectIDByIdent("eventPictureFilename", $instanceID), "");
+                    SetValue(IPS_GetObjectIDByIdent("eventPicturePath", $instanceID), "");
+                }
 
-                    if(IPS_GetProperty($instanceID, "T25LogTimestamp") == true)
-                        $event .= " am ".date("d.m.Y H:i:s", $timestamp);
+                if(isset($_GET['event'])) {
+                    $eventInput = str_replace("%0A", "", $_GET['event']);
+                    $timestamp = time();
+                    $identReplaceChars = array(' ', ',', '-', '.', ':', ';', '+', '*', '~', '!', '?', '/', '\\', '[', ']', '{', '}', '&', '%', '$', '§', '\"', '\'', '=', '´', '`', '<', '>', '|', '#');
                     
-                    SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $event);
+                    $eventList = explode(',', $eventInput);
+                
+                    foreach ($eventList as $event) {
+                        $eventID = @IPS_GetObjectIDByIdent("event_".str_replace($identReplaceChars, '_', $event), $instanceID);
+                        if($eventID == false) {
+                            $eventID = IPS_CreateVariable(3);
+                            IPS_SetIdent($eventID, "event_".str_replace($identReplaceChars, '_', $event));
+                            IPS_SetName($eventID, "Ereignis: ".$event);
+                            IPS_SetParent($eventID, $instanceID);
+                            IPS_SetIcon($eventID, "Hourglass");
+                            IPS_SetHidden($eventID, true);
+                        }
+                        SetValue($eventID, $timestamp);
 
-                    $data = array("event" => $_GET['event'], "timestamp" => date("d.m.Y H:i:s", $timestamp), "unix_timestamp" => $timestamp);
-                    @IPS_SetProperty($instanceID, "T25LastEventJSON", json_encode($data));
+                        if(IPS_GetProperty($instanceID, "T25LogTimestamp") == true)
+                            $event .= " am ".date("d.m.Y H:i:s", $timestamp);
+                        
+                        SetValue(IPS_GetObjectIDByIdent("lastEvent", $instanceID), $event);
 
-                    if(IPS_GetProperty($instanceID, "T25LogMode") == true)
-                        IPS_LogMessage(IPS_GetObject($instanceID)['ObjectName'], "Ereignis ausgelöst: ".$event);
+                        $data = array("event" => $_GET['event'], "timestamp" => date("d.m.Y H:i:s", $timestamp), "unix_timestamp" => $timestamp);
+                        @IPS_SetProperty($instanceID, "T25LastEventJSON", json_encode($data));
+
+                        if(IPS_GetProperty($instanceID, "T25LogMode") == true)
+                            IPS_LogMessage(IPS_GetObject($instanceID)['ObjectName'], "Ereignis ausgelöst: ".$event);
+                    }
                 }
             }
         }

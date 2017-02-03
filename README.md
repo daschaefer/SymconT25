@@ -68,7 +68,7 @@ Danach ist es möglich eine neue Mobotix T25 Instanz innerhalb des Objektbaumes 
 **Kamerabilder Ordner: (optional)**
 
 *Der Ordner auf den die Gegensprechanlage bei einem Ereignis Bilder ablegt. Idealerweise handelt es sich hier um eine Freigabe per FTP auf dem Symcon Server unterhalb dem Ordner webfront/users. In diesem Bilder Ordner dürfen sich keine weiteren Ordner befinden.
-Die Gegensprechanlage sollte nur Bilder in dem Verzeichnis ablegen. Der Dateiname sollte so gewählt werden das er sortierbar ist, Empfehlung: ```$(TMS.YEAR)_$(TMS.MON)_$(TMS.DAY)-$(TMS.HOUR)_$(TMS.MIN)_$(TMS.SEC).jpg```
+Die Gegensprechanlage sollte nur Bilder in dem Verzeichnis ablegen. Der Dateiname sollte so gewählt werden das er sortierbar ist, Empfehlung: ```$(TEXT.FTPFILE)```
 
 **Kamerabilder Anzahl: (optional)**
 
@@ -86,14 +86,17 @@ Die Gegensprechanlage sollte nur Bilder in dem Verzeichnis ablegen. Der Dateinam
 
 1. Webfrontend der Gegensprechanlage öffnen und als Administrator anmelden
 
-1. Admin Menü -> Profile für Netzwerkmeldungen öffnen und neues Profil anlegen (IP-Adresse und ggfs. Port anpassen):
+2. Admin Menü -> Profile für Netzwerkmeldungen öffnen und neues Profil anlegen (IP-Adresse und ggfs. Port anpassen):
+  - Parameterübersicht (mit & kombinierbar):
+    * event = ```$(EVENT.EST.ACTIVATED)``` oder beliebigen eigenen Ereignisnamen.
+    * picture = ```$(TEXT.FTPFILE)``` oder eigens vergebenen Dateinamen falls Bilder zum Ereignis gespeichert werden.
+    ![Profile für Netzwerkmeldungen](images/1_Profile_für_Netzwerkmeldungen.png?raw=true "Profile für Netzwerkmeldungen")
 
-![Profile für Netzwerkmeldungen](images/1_Profile_für_Netzwerkmeldungen.png?raw=true "Profile für Netzwerkmeldungen")
 
-1. Setup Menü -> Aktionsgruppen-Übersicht öffnen und eine neue Aktionsgruppe anlegen:
+
+3. Setup Menü -> Aktionsgruppen-Übersicht öffnen und eine neue Aktionsgruppe anlegen:
 	- Wichtig: Die hier abonnierten Ereignisse werden an IP-Symcon gemeldet!
-
-![Aktionsgruppe](images/2_Aktionsgruppe.png?raw=true "Aktionsgruppe")
+  ![Aktionsgruppe](images/2_Aktionsgruppe.png?raw=true "Aktionsgruppe")
 
 ## 4. Variablen
 **letzte Aktivität**
