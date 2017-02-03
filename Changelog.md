@@ -1,4 +1,8 @@
 # Changelog
+### Version 2.3
+Feature: Debugging Möglichkeit für den Webhook.
+Bugfix: Sortierung der letzten Ereignisse. Dazu muss die Abspeicherung der Bilder innerhalb der Kamera geändert werden => Siehe Doku.
+
 ### Version 2.2
 Feature: Ausgabe einer zuvor hochgeladenen Audiodatei über die Lautsprecher der Kamera. Aufruf via T25_PlaySoundFile(string $FileName).  
 

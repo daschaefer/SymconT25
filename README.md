@@ -61,19 +61,26 @@ Danach ist es möglich eine neue Mobotix T25 Instanz innerhalb des Objektbaumes 
 
 *Das Passwort zum Schutz des Webhooks. Wird automatisch bei Installation der Instanz generiert und muss in der Regel nicht geändert werden.*
 
+**Webhook Debugging:**
+
+*Gibt alle von der Sprechanlage übergebenen Parameter an den Webhook als Array aus.*
+
 **Kamerabilder Ordner: (optional)**
 
-*Der Ordner auf den die Gegensprechanlage bei einem Ereignis Bilder ablegt. Dazu muss die Kamera der Sprechanlage so konfiguriert werden, dass auf dieses Verzeichnis geschrieben wird. Entsprechend muss eine Freigabe erstellt werden.
-Das Verzeichnis befindet sich idealerweise im IP-Sycon Verzeichnis unter webfront/users, anderenfalls wird der Zugriff auf die Bilder schwierig.*
+*Der Ordner auf den die Gegensprechanlage bei einem Ereignis Bilder ablegt. Idealerweise handelt es sich hier um eine Freigabe per FTP auf dem Symcon Server unterhalb dem Ordner webfront/users. In diesem Bilder Ordner dürfen sich keine weiteren Ordner befinden.
+Die Gegensprechanlage sollte nur Bilder in dem Verzeichnis ablegen. Der Dateiname sollte so gewählt werden das er sortierbar ist, Empfehlung: ```$(TMS.YEAR)_$(TMS.MON)_$(TMS.DAY)-$(TMS.HOUR)_$(TMS.MIN)_$(TMS.SEC).jpg```
 
 **Kamerabilder Anzahl: (optional)**
 
 *Die Anzahl der Bilder die maximal Angezeigt werden. Im Standard: die Bilder zu den letzten 5 Ereignissen.*
 
-**Ereignisse protokollieren:**
+**Ereignisprotokollierung:**
 
 *Wenn der Haken gesetzt ist werden alle an IP-Symcon weitergeleiteten Events (Ereignisse) von der Gegensprechanlage innerhalb IP-Symcon im Log aufgezeichnet.*
 
+**Ereignisprotokoll mit Timestamp:**
+
+*Nur Sinnvoll wenn Ereignisprotokollierung aktiviert wurde. Fügt zu dem Protokolleintrag ein Datums und Zeitstempel hinzu.*
 
 ### Konfiguration der Gegensprechanlage
 

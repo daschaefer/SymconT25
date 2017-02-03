@@ -1,6 +1,11 @@
 {
 	"elements":
 	[
+		{ "type": "Label", "label": "Webhook Einstellungen" },
+		{ "name": "T25HookUsername",			"type": "ValidationTextBox", "caption": "Webhook Benutzername" },
+		{ "name": "T25HookPassword",			"type": "ValidationTextBox", "caption": "Webhook Passwort" },
+		{ "name": "T25HookDebug",             	"type": "CheckBox", "caption": "Webhook Debugging" },
+		{ "type": "Label", "label": "Konfiguration der Sprechanlage" },
 		{ "name": "T25IP",						"type": "ValidationTextBox", "caption": "IP-Adresse" },
         { "name": "T25Port",					"type": "NumberSpinner", "caption": "Port" },
         { "name": "T25Protocol",          		"type": "Select", "caption": "Protokoll", 
@@ -10,18 +15,12 @@
                     			] },
         { "name": "T25Username",				"type": "ValidationTextBox", "caption": "Benutzername" },
         { "name": "T25Password",				"type": "PasswordTextBox", "caption": "Passwort" },
-        { "type": "Label", "label": " " },
-		{ "name": "T25HookUsername",			"type": "ValidationTextBox", "caption": "Webhook Benutzername" },
-		{ "name": "T25HookPassword",			"type": "ValidationTextBox", "caption": "Webhook Passwort" },
-        { "type": "Label", "label": " " },
+        
+        { "type": "Label", "label": "Kamera Einstellungen" },
 		{ "name": "T25CameraPictureFolderName",	"type": "ValidationTextBox", "caption": "Kamerabilder Ordnername" },
         { "name": "T25CameraPictureAmount",		"type": "NumberSpinner", "caption": "Kamerabilder Anzahl" },
-		{ "type": "Label", "label": " " },
+		{ "type": "Label", "label": "Protokoll Einstellungen" },
         { "name": "T25LogMode",             	"type": "CheckBox", "caption": "Ereignisprotokollierung" },
 		{ "name": "T25LogTimestamp",            "type": "CheckBox", "caption": "Ereignisprotokoll mit Timestamp" }
-	],
-	"actions":
-	[
-		{ "type": "Button", "label": "Test", "onClick": "T25_Test($id);" }
 	]
 }
