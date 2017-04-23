@@ -24,6 +24,9 @@ class T25 extends IPSModule
 
         // Private properties
         $this->RegisterPropertyString("T25LastEventJSON", "");
+
+        // Setting timers
+        $this->RegisterTimer('timer_updatedata', 300000, 'T25_UpdateData($_IPS[\'TARGET\']);'); 
     }
     
     public function ApplyChanges() {
@@ -86,9 +89,6 @@ class T25 extends IPSModule
 
         $doorOpener = $this->RegisterVariableInteger("DoorOpener", "Türsummer", "T25.DoorOpener");
         $this->EnableAction("DoorOpener");
-
-        // Setting timers
-        $this->RegisterTimer('timer_updatedata', 300000, 'T25_UpdateData($_IPS[\'TARGET\']);'); 
     }
 
     public function RequestAction($Ident, $Value) { 
