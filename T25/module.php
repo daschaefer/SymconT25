@@ -1,6 +1,6 @@
 <?
 
-require_once('simple_html_dom.php');
+require_once(__DIR__.'/../libs/simple_html_dom.php');
 
 class T25 extends IPSModule
 {
@@ -26,7 +26,7 @@ class T25 extends IPSModule
         $this->RegisterPropertyString("T25LastEventJSON", "");
 
         // Setting timers
-        $this->RegisterTimer('timer_updatedata', 300000, 'T25_UpdateData($_IPS[\'TARGET\']);'); 
+        $this->RegisterTimer('timer_updatedata', 300000, 'T25_UpdateData($_IPS[\'TARGET\']);');
     }
     
     public function ApplyChanges() {

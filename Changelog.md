@@ -1,4 +1,7 @@
 # Changelog
+### Version 2.4
+Bugfix: Anpassung der Modulstruktur aufgrund IP-Symcon Richtlinien.
+
 ### Version 2.3
 Feature: Debugging Möglichkeit für den Webhook.
 Bugfix: Sortierung der letzten Ereignisse. Dazu muss die Abspeicherung der Bilder innerhalb der Kamera geändert werden => Siehe Doku.

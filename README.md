@@ -90,13 +90,13 @@ Die Gegensprechanlage sollte nur Bilder in dem Verzeichnis ablegen. Der Dateinam
   - Parameterübersicht (mit & kombinierbar):
     * event = ```$(EVENT.EST.ACTIVATED)``` oder beliebigen eigenen Ereignisnamen.
     * picture = ```$(TEXT.FTPFILE)``` oder eigens vergebenen Dateinamen falls Bilder zum Ereignis gespeichert werden.
-    ![Profile für Netzwerkmeldungen](images/1_Profile_für_Netzwerkmeldungen.png?raw=true "Profile für Netzwerkmeldungen")
+    ![Profile für Netzwerkmeldungen](imgs/1_Profile_für_Netzwerkmeldungen.png?raw=true "Profile für Netzwerkmeldungen")
 
 
 
 3. Setup Menü -> Aktionsgruppen-Übersicht öffnen und eine neue Aktionsgruppe anlegen:
 	- Wichtig: Die hier abonnierten Ereignisse werden an IP-Symcon gemeldet!
-  ![Aktionsgruppe](images/2_Aktionsgruppe.png?raw=true "Aktionsgruppe")
+  ![Aktionsgruppe](imgs/2_Aktionsgruppe.png?raw=true "Aktionsgruppe")
 
 ## 4. Variablen
 **letzte Aktivität**
