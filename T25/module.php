@@ -184,6 +184,8 @@ class T25 extends IPSModule
 
                 if(isset($_GET['event'])) {
                     $eventInput = str_replace("%0A", "", $_GET['event']);
+                    $eventInput = str_replace (array("\r\n", "\n", "\r"), "", $_GET['event']);
+                    
                     $timestamp = time();
                     $identReplaceChars = array(' ', ',', '-', '.', ':', ';', '+', '*', '~', '!', '?', '/', '\\', '[', ']', '{', '}', '&', '%', '$', '§', '\"', '\'', '=', '´', '`', '<', '>', '|', '#');
                     
