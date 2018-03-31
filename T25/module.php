@@ -19,7 +19,8 @@ class T25 extends IPSModule
         $this->RegisterPropertyString("T25HookUsername", "t25");
 		$this->RegisterPropertyString("T25HookPassword", $this->GeneratePassphrase(18));
         $this->RegisterPropertyBoolean("T25HookDebug", false);
-        $this->RegisterPropertyString("T25CameraPictureFolderName", "");
+        $this->RegisterPropertyString("T25CameraPictureMode", "symcon");
+        $this->RegisterPropertyString("T25CameraPictureFolderName", "t25");
         $this->RegisterPropertyInteger("T25CameraPictureAmount", 5);
 
         // Private properties
@@ -227,14 +228,22 @@ class T25 extends IPSModule
     public function LoadCameraEventPictures() {
         $amount = IPS_GetProperty($this->InstanceID, "T25CameraPictureAmount");
         
-        $path = IPS_GetKernelDir();
-        if(PHP_OS == "WINNT") {
-            $path .= "\\webfront\\user\\";
+        if(IPS_GetProperty($this->InstanceID, "T25CameraPictureMode") == "symcon") {
+            $path = IPS_GetKernelDir();
+            if(PHP_OS == "WINNT") {
+                $path .= "\\webfront\\user\\";
+            }
+            else {
+                $path .= "/webfront/user/";
+            }
+
+            $path .= IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName");
         }
-        else {
-            $path .= "/webfront/user/";
+        else if(IPS_GetProperty($this->InstanceID, "T25CameraPictureMode") == "remote") {
+            $path = IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName");
         }
-        $itemList = $this->GetCameraPictureList($path.IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName"), $amount);
+        
+        $itemList = $this->GetCameraPictureList($path, $amount);
         SetValue(IPS_GetObjectIDByIdent("CameraEventListHTML", IPS_GetObjectIDByIdent("CameraEventListPopUp", $this->InstanceID)), $this->BuildCameraEventOverview($itemList));
     }
 
@@ -383,81 +392,37 @@ class T25 extends IPSModule
     protected function GetCameraPictureList($path, $amount=5) {
         $pictures = array();
 
-        $excludeList = array(".", "..", "INFO.jpg", "log.txt", "Thumbs.db");
+        if(IPS_GetProperty($this->InstanceID, "T25CameraPictureMode") == "symcon") {
+            $excludeList = array(".", "..", "INFO.jpg", "log.txt", "Thumbs.db");
 
-        if(PHP_OS == "WINNT") {
-            $webfrontPath = "\\webfront";
-        }
-        else {
-            $webfrontPath = "/webfront";
-        }
-
-        $files = preg_grep('/^([^.])/', scandir($path, SCANDIR_SORT_DESCENDING)); // open $path excluding hidden files
-
-        $i = 0;
-        foreach ($files as $file) {
-            if($i >= $amount)
-                break;
-            
-            if (!in_array($file, $excludeList)) {
-                $pictures[] = "/user/".IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName")."/".$file."?p=".time();
+            if(PHP_OS == "WINNT") {
+                $webfrontPath = "\\webfront";
+            }
+            else {
+                $webfrontPath = "/webfront";
             }
 
-            $i++;
+            $files = preg_grep('/^([^.])/', scandir($path, SCANDIR_SORT_DESCENDING)); // open $path excluding hidden files
+
+            $i = 0;
+            foreach ($files as $file) {
+                if($i >= $amount)
+                    break;
+                
+                if (!in_array($file, $excludeList)) {
+                    $pictures[] = "/user/".IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName")."/".$file."?p=".time();
+                }
+
+                $i++;
+            }
+        }
+        else if(IPS_GetProperty($this->InstanceID, "T25CameraPictureMode") == "remote") {
+            $html = file_get_contents($path."?amount=".$amount);
+            $pictures = json_decode($html);
         }
 
         return $pictures;
     }
-
-    // protected function SortCameraPictureList($pictureList, $maxDepth=5) {
-    //     $return = array();
-    //     $fileList = $this->SortCameraPictureList_BuildFileList($pictureList);
-    //     krsort($fileList);
-
-    //     $i = 0;
-    //     foreach ($fileList as $value) {
-    //         if($i >= $maxDepth)
-    //             break;
-            
-    //         $return[] = $value;
-    //         $i++;
-    //     }
-        
-    //     return $return;
-    // }
-
-    // protected function SortCameraPictureList_BuildFileList($pictureList) {
-    //     $fileList = array();
-
-    //     if(is_array($pictureList) && count($pictureList) > 0) {
-    //         foreach ($pictureList as $listItem) {
-    //             if(count($listItem) == 1) { // is dir
-    //                 $fileList = $this->SortCameraPictureList_BuildFileList($listItem);
-    //             }
-    //             else if(count($listItem) > 1) { // is filelist
-    //                 foreach ($listItem as $path) {
-    //                     foreach ($path as $key => $value) { // key = path to file; value = array(filename)
-    //                         foreach($value as $image) {
-    //                             if(is_array($image))
-    //                                 continue;
-                                    
-    //                             if(PHP_OS == "WINNT") {
-    //                                 $webfrontPath = "\\webfront";
-    //                             }
-    //                             else {
-    //                                 $webfrontPath = "/webfront";
-    //                             }
-
-    //                             $fileList[filemtime($key."/".$image)] = str_replace(IPS_GetKernelDir().$webfrontPath,"",$key)."/".$image."?p=".time();
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return $fileList;
-    // }
 
     protected function LoadCameraInfo() {
         $url = $this->GetConnectionString()."/control/camerainfo";

@@ -65,9 +65,14 @@ Danach ist es möglich eine neue Mobotix T25 Instanz innerhalb des Objektbaumes 
 
 *Gibt alle von der Sprechanlage übergebenen Parameter an den Webhook als Array aus.*
 
+**Kamerabilder Modus: (optional)**
+
+*Gibt an ob die Ereignisbilder (optional) vom Symcon System oder einem separaten Webserver geladen werden sollen. Entsprechend muss der Kamerabilder Ordner angepasst werden. Außerdem muss, bei der Wahl eines separaten Webservers, die Datei aus dem Modulverzeichnis /libs/ext_http/index.php in den Ordner auf dem Webserver kopiert werden in dem auch die Ereignisbilder liegen werden.
+
 **Kamerabilder Ordner: (optional)**
 
-*Der Ordner auf den die Gegensprechanlage bei einem Ereignis Bilder ablegt. Idealerweise handelt es sich hier um eine Freigabe per FTP auf dem Symcon Server unterhalb dem Ordner webfront/users. In diesem Bilder Ordner dürfen sich keine weiteren Ordner befinden.
+*Der Ordner auf den die Gegensprechanlage bei einem Ereignisbilder ablegt. Idealerweise handelt es sich hier um eine Freigabe per FTP auf dem Symcon Server unterhalb dem Ordner webfront/users. In diesem Bilder Ordner dürfen sich keine weiteren Ordner befinden.
+Alternativ kann hier auch der komplette Pfad zu einem separaten Webserver angegeben werden wo die Bilder gespeichert werden.
 Die Gegensprechanlage sollte nur Bilder in dem Verzeichnis ablegen. Der Dateiname sollte so gewählt werden das er sortierbar ist, Empfehlung: ```$(TEXT.FTPFILE)```
 
 **Kamerabilder Anzahl: (optional)**
