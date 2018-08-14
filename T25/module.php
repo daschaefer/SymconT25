@@ -134,7 +134,7 @@ class T25 extends IPSModule
         file_get_contents($url);
     }
 
-    public function PlaySoundFile($FileName) {
+    public function PlaySoundFile(?string $FileName) {
         $url = $this->GetConnectionString()."/control/rcontrol?action=sound&soundfile=".urlencode($FileName);
 
         file_get_contents($url);
