@@ -22,12 +22,13 @@ class T25 extends IPSModule
         $this->RegisterPropertyString("T25CameraPictureMode", "symcon");
         $this->RegisterPropertyString("T25CameraPictureFolderName", "t25");
         $this->RegisterPropertyInteger("T25CameraPictureAmount", 5);
+        $this->RegisterPropertyInteger("T25UpdateDataInterval", 30);
 
         // Private properties
         $this->RegisterPropertyString("T25LastEventJSON", "");
 
         // Setting timers
-        $this->RegisterTimer('timer_updatedata', 300000, 'T25_UpdateData($_IPS[\'TARGET\']);');
+        $this->RegisterTimer('timer_updatedata', 0, 'T25_UpdateData($_IPS[\'TARGET\']);');
     }
     
     public function ApplyChanges() {
@@ -90,6 +91,8 @@ class T25 extends IPSModule
 
         $doorOpener = $this->RegisterVariableInteger("DoorOpener", "Türsummer", "T25.DoorOpener");
         $this->EnableAction("DoorOpener");
+
+        $this->SetTimerInterval("timer_updatedata", IPS_GetProperty($this->InstanceID, "T25UpdateDataInterval")*1000);
     }
 
     public function RequestAction($Ident, $Value) { 

@@ -16,7 +16,7 @@
 		},
         { "name": "T25Username",				"type": "ValidationTextBox", "caption": "Benutzername" },
         { "name": "T25Password",				"type": "PasswordTextBox", "caption": "Passwort" },
-        
+        { "name": "T25UpdateDataInterval",		"type": "NumberSpinner", "caption": "Update Intervall (s)" },
 		{ "type": "Label", "label": "Kamera Einstellungen" },
 		{ "name": "T25CameraPictureMode",		"type": "Select", "caption": "Kamerabilder Modus",
 					"options": [
