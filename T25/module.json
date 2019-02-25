@@ -7,7 +7,7 @@
 	[
 		"T24/T25 Sprechanlage"
 	],
-	"parentRequirements": [""],
+	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
 	"prefix": "T25"
