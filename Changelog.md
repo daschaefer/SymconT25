@@ -1,4 +1,7 @@
 # Changelog
+### Version 2.7
+Feature: Bild der Kamera kann über Image Grabber abgerufen werden, so auch per Symcon Connect nutzbar.
+
 ### Version 2.6
 Feature: Ereignisbilder sind nun auch von einem separaten Webserver ladbar. Dazu muss das File /libs/ext_http/index.php in das Verzeichnis gelegt werden wo die Ereignisbilder gespeichert werden. Anschließend kann die Konfiguration entsprechend im Modul vorgenommen werden.
 

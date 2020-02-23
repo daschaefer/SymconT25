@@ -1,33 +1,55 @@
 {
 	"elements":
 	[
-		{ "type": "Label", "label": "Webhook Einstellungen" },
-		{ "name": "T25HookUsername",			"type": "ValidationTextBox", "caption": "Webhook Benutzername" },
-		{ "name": "T25HookPassword",			"type": "ValidationTextBox", "caption": "Webhook Passwort" },
-		{ "name": "T25HookDebug",             	"type": "CheckBox", "caption": "Webhook Debugging" },
-		{ "type": "Label", "label": "Konfiguration der Sprechanlage" },
-		{ "name": "T25IP",						"type": "ValidationTextBox", "caption": "IP-Adresse" },
-        { "name": "T25Port",					"type": "NumberSpinner", "caption": "Port" },
-        { "name": "T25Protocol",          		"type": "Select", "caption": "Protokoll", 
-                    "options": [
-                    				{ "label": "HTTP",		"value": "http" },
-                    				{ "label": "HTTPS",		"value": "https" }
-								] 
+		{
+			"type": "ExpansionPanel",
+			"caption": "Sprechanlagenkonfiguration",
+			"items": [
+				{ "name": "T25IP",						"type": "ValidationTextBox", "caption": "IP-Adresse" },
+				{ "name": "T25Port",					"type": "NumberSpinner", "caption": "Port" },
+				{ "name": "T25Protocol",          		"type": "Select", "caption": "Protokoll", 
+							"options": [
+											{ "label": "HTTP",		"value": "http" },
+											{ "label": "HTTPS",		"value": "https" }
+										] 
+				},
+				{ "name": "T25Username",				"type": "ValidationTextBox", "caption": "Benutzername" },
+				{ "name": "T25Password",				"type": "PasswordTextBox", "caption": "Passwort" },
+				{ "name": "T25UpdateDataInterval",		"type": "NumberSpinner", "caption": "Update Intervall (s)" }
+			]
 		},
-        { "name": "T25Username",				"type": "ValidationTextBox", "caption": "Benutzername" },
-        { "name": "T25Password",				"type": "PasswordTextBox", "caption": "Passwort" },
-        { "name": "T25UpdateDataInterval",		"type": "NumberSpinner", "caption": "Update Intervall (s)" },
-		{ "type": "Label", "label": "Kamera Einstellungen" },
-		{ "name": "T25CameraPictureMode",		"type": "Select", "caption": "Kamerabilder Modus",
+		{
+			"type": "ExpansionPanel",
+			"caption": "Kamera Einstellungen",
+			"items": [
+				{ "name": "T25CameraPictureMode",		"type": "Select", "caption": "Kamerabilder Modus",
 					"options": [
 						{ "label": "Symcon webfront/user Ordner",		"value": "symcon" },
 						{ "label": "Remote Webserver",					"value": "remote" }
 					] 
+				},
+				{ "name": "T25CameraPictureFolderName",	"type": "ValidationTextBox", "caption": "Kamerabilder Pfad" },
+				{ "name": "T25CameraPictureAmount",		"type": "NumberSpinner", "caption": "Kamerabilder Anzahl" },
+				{ "name": "T25_IG_Enabled",             "type": "CheckBox",             "caption": "Image Grabber verwenden:" },
+                { "name": "T25_IG_RefreshInterval",     "type": "NumberSpinner",        "caption": "IG Aktualisierungsintervall:" }
+			]
 		},
-		{ "name": "T25CameraPictureFolderName",	"type": "ValidationTextBox", "caption": "Kamerabilder Pfad" },
-        { "name": "T25CameraPictureAmount",		"type": "NumberSpinner", "caption": "Kamerabilder Anzahl" },
-		{ "type": "Label", "label": "Protokoll Einstellungen" },
-        { "name": "T25LogMode",             	"type": "CheckBox", "caption": "Ereignisprotokollierung" },
-		{ "name": "T25LogTimestamp",            "type": "CheckBox", "caption": "Ereignisprotokoll mit Timestamp" }
+		{
+			"type": "ExpansionPanel",
+			"caption": "Protokoll Einstellungen",
+			"items": [
+				{ "name": "T25LogMode",             	"type": "CheckBox", "caption": "Ereignisprotokollierung" },
+				{ "name": "T25LogTimestamp",            "type": "CheckBox", "caption": "Ereignisprotokoll mit Timestamp" }
+			]
+		},
+		{
+			"type": "ExpansionPanel",
+			"caption": "Webhook Einstellungen",
+			"items": [
+				{ "name": "T25HookUsername",			"type": "ValidationTextBox", "caption": "Webhook Benutzername" },
+				{ "name": "T25HookPassword",			"type": "ValidationTextBox", "caption": "Webhook Passwort" },
+				{ "name": "T25HookDebug",             	"type": "CheckBox", "caption": "Webhook Debugging" }
+			]
+		}
 	]
 }

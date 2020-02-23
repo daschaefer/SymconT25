@@ -23,6 +23,8 @@ class T25 extends IPSModule
         $this->RegisterPropertyString("T25CameraPictureFolderName", "t25");
         $this->RegisterPropertyInteger("T25CameraPictureAmount", 5);
         $this->RegisterPropertyInteger("T25UpdateDataInterval", 30);
+        $this->RegisterPropertyBoolean("T25_IG_Enabled", false);
+        $this->RegisterPropertyInteger("T25_IG_RefreshInterval", 10);
 
         // Private properties
         $this->RegisterPropertyString("T25LastEventJSON", "");
@@ -58,6 +60,43 @@ class T25 extends IPSModule
             $url = $this->GetConnectionString()."/cgi-bin/faststream.jpg?stream=full";
 
             IPS_SetMediaFile($cameraStream, $url, false);
+        }
+
+        //image grabber
+        if($this->ReadPropertyBoolean("T25_IG_Enabled") == true) {
+            $grabber = @IPS_GetObjectIDByIdent("ImageGrabber", $this->InstanceID);
+            if(!$grabber) {
+                $grabber = IPS_CreateInstance("{5A5D5DBD-53AB-4826-8B09-71E9E4E981E5}");
+                IPS_SetName($grabber, "Kamera ImageGrab");
+                IPS_SetIdent($grabber, "ImageGrabber");
+                IPS_SetIcon($grabber, "Image");
+                IPS_SetParent($grabber, $this->InstanceID);
+
+                IPS_SetProperty($grabber, 'ImageType', 1);
+                IPS_SetProperty($grabber, 'AuthUser', IPS_GetProperty($this->InstanceID, "T25Username"));
+                IPS_SetProperty($grabber, 'AuthPass', IPS_GetProperty($this->InstanceID, "T25Password"));
+                IPS_SetProperty($grabber, 'UseBasicAuth', true);
+                IPS_SetProperty($grabber, 'ImageAddress', $this->GetCleanConnectionString()."/record/current.jpg?time=0&d=".time());
+                IPS_SetProperty($grabber, 'Interval', $this->ReadPropertyInteger("T25_IG_RefreshInterval"));
+                IPS_ApplyChanges($grabber);
+
+                IG_UpdateImage($grabber);
+            } else {
+                if($this->ReadPropertyInteger("T25_IG_RefreshInterval") != IPS_GetProperty($grabber, 'Interval')) {
+                    IPS_SetProperty($grabber, 'Interval', $this->ReadPropertyInteger("T25_IG_RefreshInterval"));
+                    IPS_ApplyChanges($grabber);
+                }
+            }
+        }
+        else {
+            $grabber = @IPS_GetObjectIDByIdent("ImageGrabber", $this->InstanceID);
+            if($grabber) {
+                $children = IPS_GetChildrenIDs($grabber);
+                foreach($children as $child) {
+                    IPS_DeleteMedia($child, true);
+                }
+                IPS_DeleteInstance($grabber);
+            }
         }
 
         // create popups
@@ -261,6 +300,12 @@ class T25 extends IPSModule
             $conn = IPS_GetProperty($this->InstanceID, "T25Protocol")."://".IPS_GetProperty($this->InstanceID, "T25IP").":".IPS_GetProperty($this->InstanceID, "T25Port");
         }
         
+        return $conn;
+    }
+
+    private function GetCleanConnectionString() {        
+        $conn = IPS_GetProperty($this->InstanceID, "T25Protocol")."://".IPS_GetProperty($this->InstanceID, "T25IP").":".IPS_GetProperty($this->InstanceID, "T25Port");
+
         return $conn;
     }
     
