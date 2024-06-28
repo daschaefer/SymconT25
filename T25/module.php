@@ -273,10 +273,10 @@ class T25 extends IPSModule
         if(IPS_GetProperty($this->InstanceID, "T25CameraPictureMode") == "symcon") {
             $path = IPS_GetKernelDir();
             if(PHP_OS == "WINNT") {
-                $path .= "\\webfront\\user\\";
+                $path .= "\\user\\";
             }
             else {
-                $path .= "/webfront/user/";
+                $path .= "/user/";
             }
 
             $path .= IPS_GetProperty($this->InstanceID, "T25CameraPictureFolderName");
